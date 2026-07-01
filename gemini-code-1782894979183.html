@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Fruit Cut Master - The ultimate arcade fruit slicing experience. Slice, combo, and score your way to the top!">
+    <title>Fruit Cut Master | Arcade Slicing Game</title>
+    <link rel="icon" type="image/png" href="assets/ui/favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <div id="assetPreloader" style="display: none;" aria-hidden="true">
+        <img id="assetLogo" src="assets/ui/logo.png" alt="Game Logo">
+        <img id="assetPlayBtn" src="assets/ui/play_button.png" alt="Play">
+        <img id="assetSettingsBtn" src="assets/ui/settings_button.png" alt="Settings">
+        
+        <img id="assetApple" src="assets/fruits/apple.png" alt="Apple">
+        <img id="assetBanana" src="assets/fruits/banana.png" alt="Banana">
+        <img id="assetOrange" src="assets/fruits/orange.png" alt="Orange">
+        <img id="assetWatermelon" src="assets/fruits/watermelon.png" alt="Watermelon">
+        <img id="assetPineapple" src="assets/fruits/pineapple.png" alt="Pineapple">
+        <img id="assetStrawberry" src="assets/fruits/strawberry.png" alt="Strawberry">
+        <img id="assetBomb" src="assets/fruits/bomb.png" alt="Bomb">
+        
+        <img id="assetSlash" src="assets/effects/slash.png" alt="Slash Effect">
+        <img id="assetExplosion" src="assets/effects/explosion.png" alt="Explosion Effect">
+    </div>
+
+    <div id="gameContainer" class="game-container">
+        
+        <div id="backgroundLayer" class="layer background-layer"></div>
+
+        <canvas id="gameCanvas" class="layer canvas-layer"></canvas>
+
+        <div id="effectsLayer" class="layer effects-layer"></div>
+
+        <div id="particleContainer" class="layer particle-container"></div>
+
+        <div id="floatingTextContainer" class="layer floating-text-container"></div>
+
+        <div id="uiLayer" class="layer ui-layer dynamic-ui">
+            <div class="hud-top">
+                <div class="hud-left">
+                    <div id="scoreDisplay" class="hud-item score-box">
+                        <span class="label">SCORE:</span> <span class="value">0</span>
+                    </div>
+                    <div id="comboDisplay" class="hud-item combo-box hidden">
+                        <span class="value">3x COMBO!</span>
+                    </div>
+                    <div id="bestScoreDisplay" class="hud-item best-score-box">
+                        <span class="label">BEST:</span> <span class="value">0</span>
+                    </div>
+                    <div id="coinsDisplay" class="hud-item coins-box">
+                        <span class="icon">🪙</span> <span class="value">0</span>
+                    </div>
+                </div>
+
+                <div class="hud-right">
+                    <button id="pauseButton" class="btn-icon" aria-label="Pause Game">
+                        <span class="icon-pause"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="hud-bottom">
+                <div id="livesContainer" class="lives-container" aria-label="Lives Remaining">
+                    <span class="life-heart active" data-life="1">❤️</span>
+                    <span class="life-heart active" data-life="2">❤️</span>
+                    <span class="life-heart active" data-life="3">❤️</span>
+                </div>
+                <div id="multiplierDisplay" class="multiplier-box hidden">
+                    <span class="value">x2 Blitz</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="loadingScreen" class="screen active" aria-live="polite">
+            <div class="screen-content">
+                <div class="loading-logo-wrapper">
+                    <img src="assets/ui/logo.png" alt="Fruit Cut Master Logo" class="loading-logo">
+                </div>
+                <div class="progress-container">
+                    <div id="loadingBar" class="loading-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <div id="loadingText" class="loading-text">Loading Assets... 0%</div>
+            </div>
+        </div>
+
+        <div id="mainMenu" class="screen hidden">
+            <div class="screen-content">
+                <h1 id="gameLogo" class="game-logo">
+                    <img src="assets/ui/logo.png" alt="Fruit Cut Master">
+                </h1>
+                <nav class="menu-navigation">
+                    <button id="playButton" class="btn-menu btn-play" aria-label="Start Game">
+                        <img src="assets/ui/play_button.png" alt="Play Game">
+                    </button>
+                    <div class="menu-grid">
+                        <button id="shopButton" class="btn-menu" aria-label="Open Shop">Shop</button>
+                        <button id="achievementsButton" class="btn-menu" aria-label="Open Achievements">Achievements</button>
+                        <button id="settingsButton" class="btn-menu" aria-label="Open Settings">
+                            <img src="assets/ui/settings_button.png" alt="Settings" class="btn-icon-img"> Settings
+                        </button>
+                        <button id="creditsButton" class="btn-menu" aria-label="Open Credits">Credits</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <div id="pauseMenu" class="screen overlay hidden" role="dialog" aria-labelledby="pauseTitle">
+            <div class="screen-content modal-box">
+                <h2 id="pauseTitle" class="menu-title">Game Paused</h2>
+                <div class="menu-vertical">
+                    <button id="resumeButton" class="btn-action">Resume Game</button>
+                    <button id="restartButton" class="btn-action">Restart</button>
+                    <button id="homeButton" class="btn-action btn-secondary">Main Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameOverScreen" class="screen overlay hidden" role="dialog" aria-labelledby="gameOverTitle">
+            <div class="screen-content modal-box">
+                <h2 id="gameOverTitle" class="menu-title game-over-text">Game Over</h2>
+                
+                <div class="stats-summary">
+                    <div class="stat-row">
+                        <span>Final Score:</span>
+                        <span id="finalScore" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>High Score:</span>
+                        <span id="highScore" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Coins Earned:</span>
+                        <span id="coinsEarned" class="stat-value gold">🪙 0</span>
+                    </div>
+                </div>
+
+                <div class="menu-vertical">
+                    <button id="playAgainButton" class="btn-action">Play Again</button>
+                    <button id="returnMenuButton" class="btn-action btn-secondary">Main Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="shopScreen" class="screen hidden" role="dialog" aria-labelledby="shopTitle">
+            <div class="screen-content panel-box">
+                <div class="panel-header">
+                    <h2 id="shopTitle" class="panel-title">Dojo Shop</h2>
+                    <button class="btn-close closeShop" aria-label="Close Shop">&times;</button>
+                </div>
+                
+                <div class="tabs-container">
+                    <section class="shop-section">
+                        <h3>Blade Skins</h3>
+                        <div id="bladeSkinsContainer" class="shop-grid">
+                            <div class="shop-item active" data-item-id="default_blade">
+                                <div class="item-preview">Original</div>
+                                <button class="btn-shop-action unlocked" disabled>Equipped</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="shop-section">
+                        <h3>Background Skins</h3>
+                        <div id="backgroundSkinsContainer" class="shop-grid">
+                            </div>
+                    </section>
+
+                    <section class="shop-section">
+                        <h3>Effect Skins</h3>
+                        <div id="effectSkinsContainer" class="shop-grid">
+                            </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <div id="achievementScreen" class="screen hidden" role="dialog" aria-labelledby="achievementTitle">
+            <div class="screen-content panel-box">
+                <div class="panel-header">
+                    <h2 id="achievementTitle" class="panel-title">Achievements</h2>
+                    <button class="btn-close closeAchievements" aria-label="Close Achievements">&times;</button>
+                </div>
+                <div id="achievementsList" class="scrollable-list">
+                    <div class="achievement-item locked">
+                        <div class="achievement-icon">🍉</div>
+                        <div class="achievement-info">
+                            <h4>First Slice</h4>
+                            <p>Slice your very first fruit piece.</p>
+                        </div>
+                        <div class="achievement-status">0/1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settingsScreen" class="screen hidden" role="dialog" aria-labelledby="settingsTitle">
+            <div class="screen-content panel-box">
+                <div class="panel-header">
+                    <h2 id="settingsTitle" class="panel-title">Settings</h2>
+                    <button class="btn-close closeSettings" aria-label="Close Settings">&times;</button>
+                </div>
+                
+                <div class="settings-options">
+                    <div class="setting-row">
+                        <label for="musicToggle">Music</label>
+                        <input type="checkbox" id="musicToggle" checked>
+                    </div>
+                    
+                    <div class="setting-row">
+                        <label for="soundToggle">Sound FX</label>
+                        <input type="checkbox" id="soundToggle" checked>
+                    </div>
+                    
+                    <div class="setting-row">
+                        <label for="qualitySetting">Graphics Quality</label>
+                        <select id="qualitySetting">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-row full-width">
+                        <button id="fullscreenButton" class="btn-action btn-secondary">Toggle Fullscreen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="notificationContainer" class="layer notification-container" aria-live="assertive"></div>
+
+    </div>
+</body>
+</html>
