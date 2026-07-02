@@ -1,0 +1,98 @@
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; touch-action: none; font-family: 'Segoe UI', Arial, sans-serif; }
+#game-canvas { position: fixed; top: 0; left: 0; display: block; touch-action: none; }
+
+.screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
+.screen.hidden { display: none; }
+.overlay { background: rgba(0,0,0,0.6); z-index: 20; }
+
+/* Loading */
+#loading-screen { background: linear-gradient(160deg,#0f0c29,#302b63,#24243e); }
+.loading-logo { font-size: 42px; font-weight: 900; color: #fff; letter-spacing: 3px; margin-bottom: 40px; text-shadow: 0 0 20px rgba(255,120,0,0.7); animation: pulseLogo 1.6s ease-in-out infinite; }
+.loading-logo span { color: #ff5722; }
+@keyframes pulseLogo { 0%,100% { transform: scale(1);} 50% { transform: scale(1.06);} }
+.loading-bar-bg { width: 70%; max-width: 420px; height: 18px; background: rgba(255,255,255,0.15); border-radius: 10px; overflow: hidden; border: 2px solid rgba(255,255,255,0.3); }
+.loading-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ff9800,#ff5722); transition: width 0.15s ease-out; }
+.loading-percent { color: #fff; margin-top: 14px; font-size: 20px; font-weight: 700; }
+.loading-count { color: #bbb; margin-top: 6px; font-size: 14px; }
+
+/* Menu */
+#menu-screen { background: transparent; }
+.menu-title { font-size: 46px; font-weight: 900; color: #fff; text-shadow: 0 4px 12px rgba(0,0,0,0.6); margin-bottom: 50px; letter-spacing: 2px; text-align: center; }
+.menu-title span { color: #ff5722; }
+.menu-buttons { display: flex; flex-direction: column; gap: 16px; width: 240px; }
+.menu-btn { padding: 16px; font-size: 18px; font-weight: 800; letter-spacing: 1px; color: #fff; background: rgba(30,30,40,0.75); border: 2px solid rgba(255,255,255,0.25); border-radius: 12px; cursor: pointer; transition: transform 0.15s, background 0.15s; }
+.menu-btn:hover, .menu-btn:active { transform: scale(1.05); background: rgba(255,255,255,0.15); }
+.menu-btn.primary { background: linear-gradient(135deg,#ff5722,#ff9800); border: none; box-shadow: 0 6px 18px rgba(255,87,34,0.5); }
+
+/* Panels (shop / achievements / settings) */
+#shop-screen, #achievements-screen, #settings-screen { background: rgba(10,10,20,0.92); justify-content: flex-start; padding-top: 24px; }
+.panel-header { width: 92%; max-width: 700px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.back-btn { background: rgba(255,255,255,0.12); border: none; color: #fff; font-size: 22px; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; }
+.panel-title { color: #fff; font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+.panel-coins { color: #ffd54f; font-weight: 700; font-size: 16px; }
+
+.shop-tabs { display: flex; gap: 10px; margin-bottom: 14px; }
+.shop-tab { padding: 10px 18px; background: rgba(255,255,255,0.08); border: none; border-radius: 20px; color: #ddd; font-weight: 700; cursor: pointer; }
+.shop-tab.active { background: linear-gradient(135deg,#ff5722,#ff9800); color: #fff; }
+
+.shop-grid { width: 92%; max-width: 700px; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 14px; overflow-y: auto; max-height: 70vh; padding-bottom: 20px; }
+.shop-card { background: rgba(255,255,255,0.06); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; align-items: center; border: 2px solid transparent; }
+.shop-card.equipped { border-color: #4caf50; }
+.shop-card-img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 8px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+.shop-card-title { color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.shop-card-btn { width: 100%; padding: 8px 4px; background: #333; border: none; border-radius: 8px; color: #fff; font-size: 11px; font-weight: 700; cursor: pointer; }
+.shop-card-btn.disabled { opacity: 0.4; }
+
+.achievements-list { width: 92%; max-width: 700px; overflow-y: auto; max-height: 80vh; display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; }
+.achievement-row { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 12px 16px; border-left: 4px solid #555; }
+.achievement-row.unlocked { border-left-color: #4caf50; }
+.ach-name { color: #fff; font-weight: 800; font-size: 15px; }
+.ach-desc { color: #aaa; font-size: 12px; margin: 3px 0 8px; }
+.ach-bar-bg { background: rgba(255,255,255,0.12); height: 8px; border-radius: 4px; overflow: hidden; }
+.ach-bar-fill { height: 100%; background: linear-gradient(90deg,#ff9800,#ff5722); }
+.ach-progress { color: #ccc; font-size: 11px; margin-top: 4px; text-align: right; }
+
+.settings-list { width: 92%; max-width: 500px; display: flex; flex-direction: column; gap: 14px; }
+.settings-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.06); padding: 16px 20px; border-radius: 12px; color: #fff; font-weight: 700; }
+.toggle-btn { padding: 8px 18px; border-radius: 20px; border: none; font-weight: 800; cursor: pointer; background: #555; color: #fff; }
+.toggle-btn.on { background: linear-gradient(135deg,#4caf50,#8bc34a); }
+
+/* HUD */
+#hud-screen { pointer-events: none; justify-content: flex-start; align-items: stretch; }
+.hud-top-left { position: absolute; top: 18px; left: 18px; color: #fff; }
+.hud-score { font-size: 24px; font-weight: 900; text-shadow: 0 2px 6px rgba(0,0,0,0.7); }
+.hud-combo { font-size: 18px; font-weight: 800; color: #ffeb3b; margin-top: 4px; text-shadow: 0 2px 6px rgba(0,0,0,0.7); min-height: 22px; }
+.hud-top-right { position: absolute; top: 18px; right: 18px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; color: #fff; }
+.hud-coins { font-size: 16px; font-weight: 800; color: #ffd54f; text-shadow: 0 2px 6px rgba(0,0,0,0.7); }
+.hud-lives { font-size: 20px; color: #ff5252; text-shadow: 0 2px 6px rgba(0,0,0,0.7); }
+.pause-btn { pointer-events: all; margin-top: 4px; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.4); color: #fff; border: 2px solid rgba(255,255,255,0.3); font-weight: 900; cursor: pointer; }
+
+/* Pause / GameOver */
+.pause-panel, .gameover-panel { background: rgba(20,20,30,0.95); border-radius: 18px; padding: 34px 40px; display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 260px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+.pause-title, .gameover-title { color: #fff; font-size: 28px; font-weight: 900; margin-bottom: 6px; letter-spacing: 1px; }
+.gameover-stat { color: #ddd; font-size: 16px; font-weight: 600; }
+
+/* Achievement popup */
+.achievement-popup { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-120%); background: linear-gradient(135deg,#212121,#000); border: 2px solid #ffd700; border-radius: 14px; padding: 14px 22px; display: flex; align-items: center; gap: 14px; z-index: 100; transition: transform 0.4s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+.achievement-popup.hidden { display: none; }
+.achievement-popup.show { transform: translateX(-50%) translateY(0); }
+.ach-popup-icon { font-size: 30px; color: #ffd700; }
+.ach-popup-title { font-size: 11px; color: #ffd700; font-weight: 800; letter-spacing: 1px; }
+.ach-popup-name { font-size: 16px; color: #fff; font-weight: 900; }
+.ach-popup-desc { font-size: 12px; color: #ccc; }
+
+@media (max-width: 600px) {
+  .menu-title { font-size: 32px; }
+  .menu-buttons { width: 200px; }
+}
+
+
+/* Level up popup */
+.levelup-popup { position: fixed; top: 40%; left: 50%; transform: translate(-50%,-50%) scale(0.4); opacity: 0; z-index: 90; pointer-events: none; transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), opacity 0.3s; }
+.levelup-popup.hidden { display: none; }
+.levelup-popup.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+.levelup-text { font-size: 40px; font-weight: 900; color: #ffeb3b; text-shadow: 0 0 20px rgba(255,235,59,0.9), 0 4px 10px rgba(0,0,0,0.6); letter-spacing: 2px; }
+
+/* Flying coin animation (spawned dynamically by script.js) */
+.flying-coin { position: fixed; width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff9c4, #ffd700 60%, #ff9800); box-shadow: 0 0 8px rgba(255,215,0,0.8); pointer-events: none; z-index: 95; transition: transform 0.6s cubic-bezier(.55,0,.85,.35), opacity 0.6s ease-in; }

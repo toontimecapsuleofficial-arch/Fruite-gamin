@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fruit Slash Ninja</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="game-canvas"></canvas>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen" class="screen">
+  <div class="loading-logo">FRUIT <span>SLASH</span> NINJA</div>
+  <div class="loading-bar-bg"><div id="loading-progress-bar" class="loading-bar-fill"></div></div>
+  <div id="loading-progress-text" class="loading-percent">0%</div>
+  <div id="loading-count-text" class="loading-count">0 / 0 Loaded</div>
+</div>
+
+<!-- MAIN MENU -->
+<div id="menu-screen" class="screen hidden">
+  <div class="menu-title">FRUIT <span>SLASH</span> NINJA</div>
+  <div class="menu-buttons">
+    <button id="btn-play" class="menu-btn primary">PLAY</button>
+    <button id="btn-shop" class="menu-btn">SHOP</button>
+    <button id="btn-achievements" class="menu-btn">ACHIEVEMENTS</button>
+    <button id="btn-settings" class="menu-btn">SETTINGS</button>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div id="shop-screen" class="screen hidden">
+  <div class="panel-header">
+    <button id="shop-back" class="back-btn">&#8592;</button>
+    <div class="panel-title">SHOP</div>
+    <div id="shop-coins-text" class="panel-coins">0</div>
+  </div>
+  <div class="shop-tabs">
+    <button id="shop-tab-swords" class="shop-tab active">SWORDS</button>
+    <button id="shop-tab-backgrounds" class="shop-tab">BACKGROUNDS</button>
+  </div>
+  <div id="shop-items" class="shop-grid"></div>
+</div>
+
+<!-- ACHIEVEMENTS -->
+<div id="achievements-screen" class="screen hidden">
+  <div class="panel-header">
+    <button id="achievements-back" class="back-btn">&#8592;</button>
+    <div class="panel-title">ACHIEVEMENTS</div>
+    <div></div>
+  </div>
+  <div id="achievements-list" class="achievements-list"></div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings-screen" class="screen hidden">
+  <div class="panel-header">
+    <button id="settings-back" class="back-btn">&#8592;</button>
+    <div class="panel-title">SETTINGS</div>
+    <div></div>
+  </div>
+  <div class="settings-list">
+    <div class="settings-row"><span>Sound</span><button id="toggle-sound" class="toggle-btn on">ON</button></div>
+    <div class="settings-row"><span>Music</span><button id="toggle-music" class="toggle-btn on">ON</button></div>
+    <div class="settings-row"><span>Vibration</span><button id="toggle-vibration" class="toggle-btn on">ON</button></div>
+  </div>
+</div>
+
+<!-- HUD -->
+<div id="hud-screen" class="screen hidden">
+  <div class="hud-top-left">
+    <div class="hud-score">SCORE: <span id="hud-score">0</span></div>
+    <div class="hud-combo" id="hud-combo"></div>
+  </div>
+  <div class="hud-top-right">
+    <div class="hud-coins">COINS: <span id="hud-coins">0</span></div>
+    <div class="hud-lives" id="hud-lives">❤❤❤</div>
+    <button id="btn-pause" class="pause-btn">II</button>
+  </div>
+</div>
+
+<!-- PAUSE -->
+<div id="pause-screen" class="screen hidden overlay">
+  <div class="pause-panel">
+    <div class="pause-title">PAUSED</div>
+    <button id="pause-resume" class="menu-btn primary">RESUME</button>
+    <button id="pause-restart" class="menu-btn">RESTART</button>
+    <button id="pause-quit" class="menu-btn">QUIT</button>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div id="gameover-screen" class="screen hidden overlay">
+  <div class="gameover-panel">
+    <div class="gameover-title">GAME OVER</div>
+    <div class="gameover-stat">Final Score: <span id="gameover-final-score">0</span></div>
+    <div class="gameover-stat">Best Score: <span id="gameover-best-score">0</span></div>
+    <div class="gameover-stat">Coins Earned: <span id="gameover-coins-earned">0</span></div>
+    <button id="gameover-again" class="menu-btn primary">PLAY AGAIN</button>
+    <button id="gameover-menu" class="menu-btn">MAIN MENU</button>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT POPUP -->
+<div id="achievement-popup" class="achievement-popup hidden">
+  <div class="ach-popup-icon">★</div>
+  <div class="ach-popup-text">
+    <div class="ach-popup-title">ACHIEVEMENT UNLOCKED</div>
+    <div class="ach-popup-name">Name</div>
+    <div class="ach-popup-desc">Desc</div>
+  </div>
+</div>
+
+<!-- LEVEL UP POPUP -->
+<div id="levelup-popup" class="levelup-popup hidden">
+  <div class="levelup-text">LEVEL UP!</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
